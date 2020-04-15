@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+#
+# Copy over a folder to views_v2 and add it to git so you can start
+# migrating it to Bootstrap v4.1
+#
+# usage: bs4_start FOLDER_NAME
+#
+# FOLDER_NAME should be the folder without the app/views/ prefix
+# FOLDER_NAME should not have a trailing slash
+require 'fileutils'
+
+folder = ARGV[0]
+source = "app/views/#{folder}"
+dest = "app/views_v2/#{folder}"
+
+if Dir.exists?(source)
+  unless Dir.exists?(dest)
+    `mkdir -p #{dest}`
+  end
+  `rsync -rt --ignore-existing "#{source}/" "#{dest}"`
+  `git add #{dest}`
+  puts "#{folder} copied to #{dest}"
+else
+  puts "#{source} doesn't exist"
+  exit 1
+end
+
+exit 0
