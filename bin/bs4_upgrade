@@ -1,0 +1,256 @@
+#!/usr/bin/env ruby
+#
+# Do common replacements from Bootstrap 3 to 4.1
+#
+# usage: bs4_upgrade FILE
+
+# Straight Tag Replacements. Order matters so we do this differently.
+EASY_REPLACEMENTS = {
+  "help-block" => "form-text",
+  "font-sm" => "small",
+  "text-light" => "text-muted",
+  "truncate" => "text-truncate",
+  "mt-2xs" => "mt-1",
+  "mt-xs" => "mt-1",
+  "mt-sm" => "mt-2",
+  "mt-md" => "mt-3",
+  "mt-lg" => "mt-4",
+  "mt-xl" => "mt-5",
+  "mt-2xl" => "mt-5",
+  "mr-2xs" => "mr-1",
+  "mr-xs" => "mr-1",
+  "mr-sm" => "mr-2",
+  "mr-md" => "mr-3",
+  "mr-lg" => "mr-4",
+  "mr-xl" => "mr-5",
+  "mr-2xl" => "mr-5",
+  "mb-2xs" => "mb-1",
+  "mb-xs" => "mb-1",
+  "mb-sm" => "mb-2",
+  "mb-md" => "mb-3",
+  "mb-lg" => "mb-4",
+  "mb-xl" => "mb-5",
+  "mb-2xl" => "mb-5",
+  "ml-2xs" => "ml-1",
+  "ml-xs" => "ml-1",
+  "ml-sm" => "ml-2",
+  "ml-md" => "ml-3",
+  "ml-lg" => "ml-4",
+  "ml-xl" => "ml-5",
+  "ml-2xl" => "ml-5",
+  "my-2xs" => "my-1",
+  "my-xs" => "my-1",
+  "my-sm" => "my-2",
+  "my-md" => "my-3",
+  "my-lg" => "my-4",
+  "my-xl" => "my-5",
+  "my-2xl" => "my-5",
+  "mx-2xs" => "mx-1",
+  "mx-xs" => "mx-1",
+  "mx-sm" => "mx-2",
+  "mx-md" => "mx-3",
+  "mx-lg" => "mx-4",
+  "mx-xl" => "mx-5",
+  "mx-2xl" => "mx-5",
+  "m-2xs" => "m-1",
+  "m-xs" => "m-1",
+  "m-sm" => "m-2",
+  "m-md" => "m-3",
+  "m-lg" => "m-4",
+  "m-xl" => "m-5",
+  "m-2xl" => "m-5",
+  "pt-2xs" => "pt-1",
+  "pt-xs" => "pt-1",
+  "pt-sm" => "pt-2",
+  "pt-md" => "pt-3",
+  "pt-lg" => "pt-4",
+  "pt-xl" => "pt-5",
+  "pt-2xl" => "pt-5",
+  "pr-2xs" => "pr-1",
+  "pr-xs" => "pr-1",
+  "pr-sm" => "pr-2",
+  "pr-md" => "pr-3",
+  "pr-lg" => "pr-4",
+  "pr-xl" => "pr-5",
+  "pr-2xl" => "pr-5",
+  "pb-2xs" => "pb-1",
+  "pb-xs" => "pb-1",
+  "pb-sm" => "pb-2",
+  "pb-md" => "pb-3",
+  "pb-lg" => "pb-4",
+  "pb-xl" => "pb-5",
+  "pb-2xl" => "pb-5",
+  "pl-2xs" => "pl-1",
+  "pl-xs" => "pl-1",
+  "pl-sm" => "pl-2",
+  "pl-md" => "pl-3",
+  "pl-lg" => "pl-4",
+  "pl-xl" => "pl-5",
+  "pl-2xl" => "pl-5",
+  "py-2xs" => "py-1",
+  "py-xs" => "py-1",
+  "py-sm" => "py-2",
+  "py-md" => "py-3",
+  "py-lg" => "py-4",
+  "py-xl" => "py-5",
+  "py-2xl" => "py-5",
+  "px-2xs" => "px-1",
+  "px-xs" => "px-1",
+  "px-sm" => "px-2",
+  "px-md" => "px-3",
+  "px-lg" => "px-4",
+  "px-xl" => "px-5",
+  "px-2xl" => "px-5",
+  "p-2xs" => "p-1",
+  "p-xs" => "p-1",
+  "p-sm" => "p-2",
+  "p-md" => "p-3",
+  "p-lg" => "p-4",
+  "p-xl" => "p-5",
+  "p-2xl" => "p-5",
+  "table-condensed" => "table-sm",
+  "img-responsive" => "img-fluid",
+  "circle" => "rounded-circle",
+  "img-circle" => "rounded-circle",
+  "flex-auto" => "flex-shrink-0",
+  "flex" => "d-flex",
+  "inline-flex" => "d-inline-flex",
+  "flex-sm" => "d-md-flex",
+  "flex-xs" => "d-flex d-md-block",
+  "flex-md" => "d-md-flex",
+  "row-reverse" => "flex-row-reverse",
+  "center" => "text-center",
+  "justify" => "text-justify",
+  "justify-center" => "justify-content-center",
+  "justify-space-between" => "justify-content-between",
+  "justify-end" => "justify-content-end",
+  "align-items-c" => "align-items-center",
+  "flex-11" => "flex-fill",
+  "flex-01" => "flex-grow-0 flex-shrink-1",
+  "flex-10" => "flex-grow-1 flex-shrink-0",
+  "bt0" => "border-top-0",
+  "br0" => "border-right-0",
+  "bb0" => "border-bottom-0",
+  "bl0" => "border-left-0",
+  "btn-default" => "btn-secondary",
+  "btn-xs" => "btn-sm",
+  "left-align" => "text-left",
+  "right-align" => "text-right",
+  "md-left-align" => "text-md-left",
+  "md-center" => "text-md-center",
+  "md-right-align" => "text-md-right",
+  "md-justify" => "text-md-justify",
+  "sm-left-align" => "text-md-left",
+  "sm-center" => "text-md-center",
+  "sm-right-align" => "text-md-right",
+  "sm-justify" => "text-md-justify",
+  "break-word" => "text-break",
+  "monospace" => "text-monospace",
+  "bold" => "font-weight-bold",
+  "regular" => "font-weight-normal",
+  "italic" => "font-italic",
+  "list-style-none" => "list-unstyled",
+  "list-reset" => "list-unstyled",
+  "relative" => "position-relative",
+  "absolute" => "position-absolute",
+  "visible-print-block" => "d-print-block",
+  "hidden-print" => "d-print-none",
+  "col-xs-1" => "col-1",
+  "col-xs-2" => "col-2",
+  "col-xs-3" => "col-3",
+  "col-xs-4" => "col-4",
+  "col-xs-5" => "col-5",
+  "col-xs-6" => "col-6",
+  "col-xs-7" => "col-7",
+  "col-xs-8" => "col-8",
+  "col-xs-9" => "col-9",
+  "col-xs-10" => "col-10",
+  "col-xs-11" => "col-11",
+  "col-xs-12" => "col-12",
+  "bg-base" => "bg-white",
+  "bg-dark" => "bg-light"
+}
+
+REMOVED_CLASSES = {
+  "hidden-xs" => "Use the new responsive utilities instead. d-none d-md-block will probably work.",
+  "hidden-sm" => "Use the new responsive utilities instead. d-none d-md-block will probably work.",
+  "hidden-md" => "Use the new responsive utilities instead. d-md-none d-lg-block will probably work.",
+  "hidden-lg" => "Use the new responsive utilities instead. d-xl-none will probably work.",
+  "visible-xs-block" => "Use the new responsive utilities instead.",
+  "visible-xs-inline" => "Use the new responsive utilities instead.",
+  "visible-xs-inline-block" => "Use the new responsive utilities instead.",
+  "visible-sm-block" => "Use the new responsive utilities instead.",
+  "visible-sm-inline" => "Use the new responsive utilities instead.",
+  "visible-sm-inline-block" => "Use the new responsive utilities instead.",
+  "visible-md-block" => "Use the new responsive utilities instead.",
+  "visible-md-inline" => "Use the new responsive utilities instead.",
+  "visible-md-inline-block" => "Use the new responsive utilities instead.",
+  "visible-lg-block" => "Use the new responsive utilities instead.",
+  "visible-lg-inline" => "Use the new responsive utilities instead.",
+  "visible-lg-inline-block" => "Use the new responsive utilities instead.",
+  "col-md-offset-2" => "Use justify-content-center on the row instead",
+  "col-md-offset-1" => "Use justify-content-center on the row instead",
+  "col-lg-offset-1" => "Use justify-content-center on the row instead",
+  "col-lg-offset-2" => "Use justify-content-center on the row instead",
+  "panel" => "Has been replaced with .card",
+  "thumbnail" => "Has been replaced with .card",
+  "well" => "Has been replaced with .card"
+}
+
+COMPLEX_CLASSES = {
+  "list-inline" => "Add .list-inline-item to all items in the list.",
+  "table-responsive" => "Refactor the table to use the class directly.",
+  "card" => "Bootstrap's Card Component conflicts with our card component.",
+  "breadcrumb" => "Add .breadcrumb-item to all items under breadcrumbs.",
+  "badge" => "Badges shouldn't have background colors.",
+  "input-group" => "Input group dom structure has changed. Refer to Bootstrap documentation: https://getbootstrap.com/docs/4.4/migration/#input-groups",
+  "pagination" => "Add .page-item and .page-link to items.",
+  "container" => "Don't nest multiple containers in views. It generally isn't necessary since the top-level layouts already have containers.",
+  "bg-base-hover" => "These classes don't exist in Boostrap 4 and conflict with their colours",
+  "bg-dark-gray" => "These classes don't exist in Boostrap 4 and conflict with their colours",
+  "bg-dark-hover" => "These classes don't exist in Boostrap 4 and conflict with their colours",
+  "bg-darker" => "These classes don't exist in Boostrap 4 and conflict with their colours",
+  "control-label" => "Has been replaced with col-form-label, however it is only for use with horizontal and inline forms which nearly none of our forms use"
+
+}
+
+def check_for(content, classes, reason)
+  pattern = Regexp.new(Regexp.union(classes.keys))
+  content.scan(pattern).collect { |match| match }.uniq.each do |match|
+    puts "WARNING: Contains #{match}, which is #{reason}. #{classes.fetch(match, '')}"
+  end
+end
+
+def process_file(file)
+  return if File.directory?(file)
+
+  content = File.read(file)
+
+  puts "\n❱ Reading #{file}"
+  EASY_REPLACEMENTS.each do |old_tag, new_tag|
+    regex = /([^-])(#{old_tag})([^-])/
+    matches = content.scan(regex)
+    next if matches.empty?
+
+    matches.each do |one, two, three|
+      old = [one, two, three].join()
+      print "Replacing #{old_tag} with #{new_tag}..."
+      content.gsub!(old, [one, new_tag, three].join)
+      puts "✔︎"
+    end
+  end
+
+  check_for(content, REMOVED_CLASSES, 'no longer supported')
+  check_for(content, COMPLEX_CLASSES, 'a complex change')
+
+  File.open(file, 'w') { |f| f.write(content) }
+end
+
+file = "app/views_v2/#{ARGV[0]}"
+if File.directory?(file)
+  Dir["#{file}/**/*"].each do |filename|
+    process_file(filename)
+  end
+else
+  process_file(file)
+end
