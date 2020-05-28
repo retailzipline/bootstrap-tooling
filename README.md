@@ -1,5 +1,7 @@
 # Tooling we've built to upgrade Bootstrap 4
-In spring 2020 we upgraded our UI framework to Bootstrap 4. Along the way, we built a variety of tools to help make the process easier. This is a collection of some of those custom tools.
+In spring 2020 [Retail Zipline](https://retail-zipline.breezy.hr) upgraded our UI framework to Bootstrap 4. Along the way, we built a variety of tools to help make the process easier. This is a collection of some of those custom tools.
+
+This code is likely won't work as-is because it's specific to our code at the time, but is meant as an aid and reference.
 
 ## Command-Line Tools
 - [bs4_migration_check](https://github.com/retailzipline/bootstrap-tooling/blob/master/bin/bs4_migration_check): status checker for how many views remain
