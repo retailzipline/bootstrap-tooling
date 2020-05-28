@@ -5,11 +5,6 @@
 # usage: bs4_migration_check
 pending = `rsync -nrti --ignore-existing app/views/* app/views_v2`.split("\n").collect { |path| path[10..-1] }.select { |path| /html|slim|erb/.match?(path)  }
 
-# Not upgrading gap teams page because it should be removed
-pending.reject! { |path| path.start_with?('util') }
-# Not upgrading the widget until later conversations with LUSH
-pending.reject! { |path| path.start_with?('widget') }
-
 puts ""
 puts "#{pending.size} remaining:"
 pending.group_by { |filename| filename.split('/').first }.sort_by { |k, v| v.size * -1 }.each do |group, files|
